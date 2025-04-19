@@ -292,7 +292,6 @@
   
   .main-header {
     height: var(--header-height);
-    h1-color: linear-gradient(45deg, var(--aurora-blue), var(--aurora-purple), var(--aurora-green), var(--aurora-pink));
     display: flex;
     align-items: center;
     padding: 0 1.5rem;
@@ -433,7 +432,6 @@
   }
   
   .message.ai .message-avatar {
-    background-color:rgb(0, 0, 0);
     color: #ffffff;
   }
   
