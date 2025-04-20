@@ -1,131 +1,130 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-  <meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <title>VEX AI - Advanced AI Assistant</title>  
-  <link rel="stylesheet" href="styles.css">  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">  
-</head>  
-<body class="dark-theme">  
-  <div class="app-container">  
-    <!-- Sidebar -->  
-    <aside class="sidebar" id="sidebar">  
-      <div class="sidebar-header">  
-        <!-- Adding VEX AI Logo -->  
-        <div class="app-logo-container">  
-          <img src="vexai.png" alt="VEX AI" class="app-logo">  
-        </div>  
-      </div>  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VEX AI Chat Interface</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo aurora-gradient-text">VEX AI</div>
+      </div>
       
-      <div class="sidebar-content">  
-        <div class="sidebar-section">  
-          <h3 class="sidebar-section-title">AI Services</h3>  
-          <ul class="sidebar-menu">  
-            <li class="sidebar-menu-item active" data-id="chat">  
-              <a href="#"><i class="fas fa-comment-dots aurora-gradient-icon"></i> <span>Chat</span></a>  
-            </li>  
-            <li class="sidebar-menu-item" data-id="images">  
-              <a href="#"><i class="fas fa-image aurora-gradient-icon"></i> <span>Image Generation</span></a>  
-            </li>  
-            <li class="sidebar-menu-item" data-id="documents">  
-              <a href="#"><i class="fas fa-file-alt aurora-gradient-icon"></i> <span>Document Analysis</span></a>  
-            </li>  
-            <li class="sidebar-menu-item" data-id="code">  
-              <a href="#"><i class="fas fa-code aurora-gradient-icon"></i> <span>Code Assistant</span></a>  
-            </li>  
-          </ul>  
-        </div>  
+      <div class="sidebar-content">
+        <!-- New Chat Button -->
+        <div class="sidebar-section">
+          <div class="sidebar-menu">
+            <div class="sidebar-menu-item" id="new-chat">
+              <a href="#">
+                <i class="fas fa-plus-circle aurora-gradient-icon"></i>
+                <span>New Chat</span>
+              </a>
+            </div>
+          </div>
+        </div>
         
-        <div class="sidebar-section">  
-          <h3 class="sidebar-section-title">Chat History</h3>  
-          <ul class="sidebar-menu">  
-            <li class="sidebar-menu-item" id="new-chat">  
-              <a href="#" class="glow-on-hover"><i class="fas fa-plus"></i> <span>New Chat</span></a>  
-            </li>  
-            <!-- Chat history items will be added here by JavaScript -->  
-            <div id="chat-history-list"></div>  
-          </ul>  
-        </div>  
+        <!-- Chat History -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Recent Chats</div>
+          <div class="sidebar-menu" id="chat-history-list">
+            <!-- Chat history items will be added here dynamically -->
+          </div>
+        </div>
         
-        <div class="sidebar-section">  
-          <h3 class="sidebar-section-title">Support</h3>  
-          <ul class="sidebar-menu">  
-            <li class="sidebar-menu-item" data-id="settings">  
-              <a href="#"><i class="fas fa-cog"></i> <span>Settings</span></a>  
-            </li>  
-            <li class="sidebar-menu-item" data-id="help">  
-              <a href="#"><i class="fas fa-question-circle"></i> <span>Help & FAQ</span></a>  
-            </li>  
-          </ul>  
-        </div>  
-      </div>  
+        <!-- Services -->
+        <div class="sidebar-section">
+          <div class="sidebar-section-title">Services</div>
+          <div class="sidebar-menu">
+            <div class="sidebar-menu-item active" data-id="chat">
+              <a href="#">
+                <i class="fas fa-comment-dots aurora-gradient-icon"></i>
+                <span>Chat</span>
+              </a>
+            </div>
+            <div class="sidebar-menu-item" data-id="images">
+              <a href="#">
+                <i class="fas fa-image aurora-gradient-icon"></i>
+                <span>Images</span>
+              </a>
+            </div>
+            <div class="sidebar-menu-item" data-id="documents">
+              <a href="#">
+                <i class="fas fa-file-alt aurora-gradient-icon"></i>
+                <span>Documents</span>
+              </a>
+            </div>
+            <div class="sidebar-menu-item" data-id="code">
+              <a href="#">
+                <i class="fas fa-code aurora-gradient-icon"></i>
+                <span>Code</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
       
-      <div class="sidebar-footer">  
-        <button id="theme-toggle" class="theme-toggle-btn glow-on-hover">  
-          <i class="fas fa-sun"></i>  
-          <span>Light Mode</span>  
-        </button>  
-        <ul class="sidebar-menu">  
-          <li class="sidebar-menu-item">  
-            <a href="#"><i class="fas fa-user"></i> <span>Profile</span></a>  
-          </li>  
-          <li class="sidebar-menu-item">  
-            <a href="#"><i class="fas fa-sign-out-alt"></i> <span>Sign Out</span></a>  
-          </li>  
-        </ul>  
-      </div>  
-    </aside>  
-
-    <!-- Main Content -->  
-    <main class="main-content">  
-      <header class="main-header">  
-        <button id="sidebar-toggle" class="sidebar-toggle-btn">  
-          <i class="fas fa-bars"></i>  
-        </button>  
-        <h1>VEX</h1>  
-      </header>  
+      <div class="sidebar-footer">
+        <button class="theme-toggle-btn" id="theme-toggle">
+          <i class="fas fa-moon"></i>
+          <span>Dark Mode</span>
+        </button>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <header class="main-header">
+        <button class="sidebar-toggle-btn" id="sidebar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="small">VEX AI Assistant</h1>
+      </header>
       
-      <div class="content-container">  
-        <!-- Welcome Animation -->  
-        <div id="welcome-animation" class="welcome-animation">  
-          <h1 class="welcome-title">  
-            <span class="welcome-text aurora-gradient-text">Welcome to VEX AI</span>  
-          </h1>  
-          <div class="welcome-description">  
-            <p class="welcome-text">  
-              Powered by <span class="aurora-gradient-text font-semibold">advanced AI</span> for lightning-fast responses  
-            </p>  
-            <p class="welcome-text muted">  
-              Ask me anything, generate images, analyze documents, or get help with code  
-            </p>  
-            <p class="welcome-text small muted">  
-              Your AI assistant with text-to-speech capabilities and advanced features  
-            </p>  
-          </div>  
-        </div>  
+      <div class="content-container">
+        <!-- Welcome Animation -->
+        <div class="welcome-animation" id="welcome-animation">
+          <h1 class="welcome-title">Welcome to <span class="aurora-gradient-text">VEX AI</span></h1>
+          <div class="welcome-description">
+            <p class="welcome-text">Your intelligent AI assistant powered by advanced language models.</p>
+            <p class="welcome-text">Ask me anything, from simple questions to complex tasks.</p>
+            <p class="welcome-text">I'm here to help you be more productive and creative.</p>
+          </div>
+          <div class="aurora-loading">
+            <div class="aurora-loading-dot"></div>
+            <div class="aurora-loading-dot"></div>
+            <div class="aurora-loading-dot"></div>
+          </div>
+        </div>
         
-        <!-- Chat Interface -->  
-        <div class="chat-interface">  
-          <div class="chat-messages" id="chat-messages">  
-            <!-- Messages will be added here by JavaScript -->  
-          </div>  
+        <!-- Chat Interface -->
+        <div class="chat-interface">
+          <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be added here dynamically -->
+          </div>
           
-          <div class="chat-input-container">  
-            <button id="tts-toggle" class="tts-toggle-btn glow-on-hover" title="Toggle text-to-speech">  
-              <i class="fas fa-volume-mute"></i>  
-            </button>  
-            <textarea id="message-input" placeholder="Type your message..." rows="1"></textarea>  
-            <button id="send-message" class="send-btn aurora-gradient-button" disabled>  
-              <i class="fas fa-paper-plane"></i>  
-            </button>  
-          </div>  
-        </div>  
-      </div>  
-    </main>  
-  </div>  
-
-  <script src="script.js"></script>  
-</body>  
+          <div class="chat-input-container">
+            <button class="tts-toggle-btn" id="tts-toggle" title="Toggle text-to-speech">
+              <i class="fas fa-volume-mute"></i>
+            </button>
+            <textarea id="message-input" placeholder="Type your message here..." rows="1"></textarea>
+            <button class="send-btn" id="send-message" disabled>
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
 </html>
