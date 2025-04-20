@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // DOM Elements
   const sidebar = document.getElementById("sidebar");
   const sidebarToggle = document.getElementById("sidebar-toggle");
+  const sidebarOverlay = document.getElementById("sidebar-overlay");
   const themeToggle = document.getElementById("theme-toggle");
   const welcomeAnimation = document.getElementById("welcome-animation");
   const chatMessages = document.getElementById("chat-messages");
@@ -51,6 +52,14 @@ document.addEventListener("DOMContentLoaded", () => {
       sidebarToggle.addEventListener("click", toggleSidebar);
     }
 
+    // Sidebar overlay (for mobile)
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener("click", () => {
+        sidebar.classList.remove("mobile-open");
+        sidebarOverlay.classList.remove("active");
+      });
+    }
+
     // Theme toggle
     if (themeToggle) {
       themeToggle.addEventListener("click", toggleTheme);
@@ -76,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // On mobile, close sidebar after selection
         if (window.innerWidth <= 768) {
           sidebar.classList.remove("mobile-open");
+          sidebarOverlay.classList.remove("active");
         }
       });
     });
@@ -115,6 +125,12 @@ document.addEventListener("DOMContentLoaded", () => {
       newChatButton.addEventListener("click", (e) => {
         e.preventDefault();
         startNewChat();
+        
+        // On mobile, close sidebar after selection
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove("mobile-open");
+          sidebarOverlay.classList.remove("active");
+        }
       });
     }
   }
@@ -122,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function toggleSidebar() {
     if (window.innerWidth <= 768) {
       sidebar.classList.toggle("mobile-open");
+      sidebarOverlay.classList.toggle("active");
     } else {
       sidebar.classList.toggle("collapsed");
     }
@@ -166,6 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.innerWidth <= 768) {
       sidebar.classList.remove("collapsed");
       sidebar.classList.remove("mobile-open");
+      sidebarOverlay.classList.remove("active");
     }
   }
 
@@ -206,10 +224,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (message.role === "user") {
       avatarElement.innerHTML = '<i class="fas fa-user"></i>';
     } else {
-      // Updated gradient fox avatar for AI
+      // Fox avatar for AI
       avatarElement.innerHTML = `
         <div class="fox-avatar">
-          <img src="vexai.png" alt="VEX AI Fox Logo" class="fox-logo">
+          <i class="fas fa-robot"></i>
         </div>
       `;
     }
@@ -313,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
     avatarElement.className = "message-avatar";
     avatarElement.innerHTML = `
       <div class="fox-avatar">
-        <img src="vexai.png" alt="VEX AI Fox Logo" class="fox-logo">
+        <i class="fas fa-robot"></i>
       </div>
     `;
 
