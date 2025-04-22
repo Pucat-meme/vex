@@ -94,17 +94,19 @@
             height: 100vh;
             background-color: var(--sidebar-bg);
             border-right: 1px solid var(--border-color);
-            transition: width var(--transition-speed) ease;
+            transition: transform var(--transition-speed) ease, width var(--transition-speed) ease;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             backdrop-filter: blur(10px);
-            position: relative;
-            z-index: 10;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
         }
 
         .sidebar.collapsed {
-            width: var(--sidebar-collapsed-width);
+            transform: translateX(-100%);
         }
 
         .sidebar-header {
@@ -173,6 +175,14 @@
             height: 100vh;
             position: relative;
             overflow: hidden;
+            margin-left: var(--sidebar-width);
+            transition: margin-left var(--transition-speed) ease;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+            width: 100%;
         }
 
         .chat-header {
@@ -757,24 +767,40 @@
             box-shadow: 0 5px 15px rgba(124, 58, 237, 0.4);
         }
 
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .sidebar {
-                position: fixed;
-                left: 0;
-                top: 0;
-                z-index: 100;
-                transform: translateX(-100%);
                 width: 80%;
                 max-width: 300px;
+                transform: translateX(-100%);
             }
 
             .sidebar.active {
                 transform: translateX(0);
             }
 
-            .sidebar.collapsed {
-                transform: translateX(-100%);
+            .main-content {
+                margin-left: 0;
+                width: 100%;
             }
 
             .welcome-title {
@@ -792,8 +818,11 @@
     </style>
 </head>
 <body>
+    <!-- Sidebar Overlay (for mobile) -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
+    <div class="sidebar collapsed" id="sidebar">
         <div class="sidebar-header">
             <img src="vexai.png" alt="VEX AI Logo" class="logo">
             <h1 class="app-title">VEX AI</h1>
@@ -820,7 +849,7 @@
             
             <!-- Theme Toggle - Moved to bottom -->
             <div class="theme-toggle">
-                <div class="theme-icon" id="dark-theme-btn" title="Dark Theme">
+                <div class="theme-icon active" id="dark-theme-btn" title="Dark Theme">
                     <i class="fas fa-moon"></i>
                 </div>
                 <div class="theme-icon" id="light-theme-btn" title="Light Theme">
@@ -835,7 +864,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content expanded" id="main-content">
         <div class="chat-header">
             <div class="header-left">
                 <button class="toggle-sidebar" id="toggle-sidebar-btn">
@@ -902,6 +931,7 @@
     <script>
         // DOM Elements
         const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
         const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
         const newChatBtn = document.getElementById('new-chat-btn');
         const clearChatBtn = document.getElementById('clear-chat-btn');
@@ -919,6 +949,7 @@
         const modalMessage = document.getElementById('modal-message');
         const modalCancel = document.getElementById('modal-cancel');
         const modalConfirm = document.getElementById('modal-confirm');
+        const mainContent = document.getElementById('main-content');
 
         // Hard-coded API key (replace this with your actual Groq API key)
         const apiKey = "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";
@@ -983,9 +1014,20 @@
                 hideConfirmationModal();
             });
 
-            // Mobile detection for sidebar behavior
+            // Sidebar overlay click to close sidebar on mobile
+            sidebarOverlay.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    closeSidebar();
+                }
+            });
+
+            // Set initial sidebar state based on screen size
             if (window.innerWidth <= 768) {
                 sidebar.classList.add('collapsed');
+                mainContent.classList.add('expanded');
+            } else {
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('expanded');
             }
 
             // Welcome gradient effect
@@ -1021,10 +1063,35 @@
 
         // Toggle Sidebar
         function toggleSidebar() {
-            if (window.innerWidth <= 768) {
-                sidebar.classList.toggle('active');
+            if (sidebar.classList.contains('collapsed')) {
+                openSidebar();
             } else {
-                sidebar.classList.toggle('collapsed');
+                closeSidebar();
+            }
+        }
+
+        // Open Sidebar
+        function openSidebar() {
+            sidebar.classList.remove('collapsed');
+            sidebar.classList.add('active');
+            
+            if (window.innerWidth <= 768) {
+                sidebarOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
+            } else {
+                mainContent.classList.remove('expanded');
+            }
+        }
+
+        // Close Sidebar
+        function closeSidebar() {
+            sidebar.classList.add('collapsed');
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+            
+            if (window.innerWidth > 768) {
+                mainContent.classList.add('expanded');
             }
         }
 
@@ -1108,6 +1175,11 @@
             displayWelcomeMessage();
             
             showToast('New chat created', 'fa-plus-circle');
+            
+            // Close sidebar on mobile after creating a new chat
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
         }
 
         // Display Welcome Message (not as an AI message)
@@ -1191,6 +1263,11 @@
                         item.classList.add('active');
                     }
                 });
+                
+                // Close sidebar on mobile after switching chats
+                if (window.innerWidth <= 768) {
+                    closeSidebar();
+                }
             }
         }
 
@@ -1497,10 +1574,19 @@
         // Handle window resize
         window.addEventListener('resize', () => {
             if (window.innerWidth <= 768) {
-                sidebar.classList.add('collapsed');
-                sidebar.classList.remove('active');
+                if (!sidebar.classList.contains('active')) {
+                    sidebar.classList.add('collapsed');
+                    mainContent.classList.add('expanded');
+                }
             } else {
-                sidebar.classList.remove('collapsed');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                
+                if (!sidebar.classList.contains('collapsed')) {
+                    mainContent.classList.remove('expanded');
+                } else {
+                    mainContent.classList.add('expanded');
+                }
             }
         });
     </script>
